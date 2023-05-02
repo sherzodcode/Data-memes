@@ -19,8 +19,11 @@ model User {
   password String
   avatar String
   memes Memes[]
+  likes Likes[]
+  shares Shares[]
+  comments Comments[]
 }
-
+    
 model Memes {
   id Int @id @default(autoincrement())
   author User @relation(fields: [authorId], references: [id])
@@ -29,6 +32,46 @@ model Memes {
   description String
   thumbnail String
   image String
-  likes Int
-  shares Int
+
+  category Category[]
+  likes Likes[]
+  shares Shares[]
+  comments Comments[]
 }
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String
+  memeId Int
+  meme Memes @relation(fields: [memeId], references: [id])
+}
+  
+
+model Likes {
+  id Int @id @default(autoincrement())
+  userId Int 
+  user User @relation(fields: [userId], references: [id])
+  memeId Int
+  meme Memes @relation(fields: [memeId], references: [id])
+  
+  createdAt DateTime @default(now())
+}
+
+model Shares {
+  id Int @id @default(autoincrement())
+  userId Int
+  memeId Int
+  user User @relation(fields: [userId], references: [id])
+  meme Memes @relation(fields: [memeId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Comments {
+  id Int @id @default(autoincrement())
+  message String
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+  meme Memes @relation(fields: [memeId], references: [id])
+  memeId Int
+}
+
